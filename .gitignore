@@ -1,0 +1,11 @@
+# Dependency directories
+node_modules/
+
+# dotenv environment variables file
+.env
+.env.test
+src/config.js
+
+#docker
+/docker-compose.yml
+public/bundle.js

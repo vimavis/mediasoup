@@ -1,0 +1,21 @@
+{
+  "name": "mediasoup-example",
+  "version": "1.0.0",
+  "description": "mediasoup multiroom example",
+  "main": "src/index.js",
+  "scripts": {
+    "init": "cp examples/config.js src/config.js && cp examples/docker-compose.yml docker-compose.yml && npm install -g browserify",
+    "start": "browserify public/index.js -o public/bundle.js -v && node src/index.js"
+  },
+  "author": "Victor Vasquez",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "express": "^4.17.1",
+    "httpolyglot": "^0.1.2",
+    "mediasoup": "^3.8.3",
+    "mediasoup-client": "^3.6.37",
+    "socket.io": "^4.2.0",
+    "socket.io-client": "^4.2.0"
+  }
+}
