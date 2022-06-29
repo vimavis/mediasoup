@@ -1,15 +1,10 @@
-//index.js
 const io = require('socket.io-client')
 const mediasoupClient = require('mediasoup-client')
 
 const roomName = window.location.pathname.split('/')[2]
 
+let connected = false;
 const socket = io("/mediasoup")
-
-socket.on('connection-success', ({ socketId }) => {
-  console.log(socketId)
-  getLocalStream()
-})
 
 let device
 let rtpCapabilities
@@ -17,13 +12,8 @@ let producerTransport
 let consumerTransports = []
 let audioProducer
 let videoProducer
-let consumer
-let isProducer = false
 
-// https://mediasoup.org/documentation/v3/mediasoup-client/api/#ProducerOptions
-// https://mediasoup.org/documentation/v3/mediasoup-client/api/#transport-produce
 let params = {
-  // mediasoup params
   encodings: [
     {
       rid: 'r0',
@@ -41,7 +31,6 @@ let params = {
       scalabilityMode: 'S1T3',
     },
   ],
-  // https://mediasoup.org/documentation/v3/mediasoup-client/api/#ProducerCodecOptions
   codecOptions: {
     videoGoogleStartBitrate: 1000
   }
@@ -50,6 +39,27 @@ let params = {
 let audioParams;
 let videoParams = { params };
 let consumingTransports = [];
+
+socket.on('connection-success', ({ socketId }) => {
+  console.log(socketId)
+  if (!connected) {
+    connected = true;
+  } else {
+    deleteAll()
+    consumerTransports = []
+    device = undefined
+    rtpCapabilities = undefined
+    producerTransport = undefined
+    audioProducer = undefined
+    videoProducer = undefined
+    audioParams = undefined
+    videoParams = { params };
+    consumingTransports = []
+  }
+  getLocalStream()
+})
+
+
 
 const streamSuccess = (stream) => {
   localVideo.srcObject = stream
@@ -336,6 +346,10 @@ const connectRecvTransport = async (consumerTransport, remoteProducerId, serverC
 socket.on('producer-closed', ({ remoteProducerId }) => {
   // server notification is received when a producer is closed
   // we need to close the client-side consumer and associated transport
+  closeUser(remoteProducerId)
+})
+
+const closeUser = (remoteProducerId) => {
   const producerToClose = consumerTransports.find(transportData => transportData.producerId === remoteProducerId)
   producerToClose.consumerTransport.close()
   producerToClose.consumer.close()
@@ -345,4 +359,10 @@ socket.on('producer-closed', ({ remoteProducerId }) => {
 
   // remove the video div element
   videoContainer.removeChild(document.getElementById(`td-${remoteProducerId}`))
-})
+};
+
+const deleteAll = () => {
+  while (videoContainer.lastElementChild) {
+    videoContainer.removeChild(videoContainer.lastElementChild);
+  }
+}

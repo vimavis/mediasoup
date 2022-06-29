@@ -8,5 +8,5 @@ httpsServer.listen(port, () => {
 });
 const io = new Server(httpsServer);
 
-const connections = io.of('/mediasoup');
-connections.on('connection', mediaSoupApp);
+const mediasoupConnections = io.of('/mediasoup');
+mediasoupConnections.on('connection', mediaSoupApp);
