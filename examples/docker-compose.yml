@@ -1,0 +1,14 @@
+version: "3"
+services:
+  linux:
+    container_name: "ubuntu-mediasoup"
+    image: "ubuntu"
+    restart: "always"
+    tty: true
+    ports:
+      - "3000:3000"
+      - "8000-9000:8000-9000"
+    volumes:
+      - "~/.ssh:/home/user/.ssh" # use ssh git
+      - "PATH/domain.com:/var/apps/ssl"
+      - "PATH_LOCAL/mediasoup:/var/apps/mediasoup"
