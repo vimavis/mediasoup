@@ -140,8 +140,12 @@ const getTransport = (socketId) => {
 const informConsumers = (roomName, socketId, id) => {
     producers.forEach(producerData => {
         if (producerData.socketId !== socketId && producerData.roomName === roomName) {
-            const producerSocket = peers[producerData.socketId].socket;
-            producerSocket.emit('new-producer', { producerId: id });
+            if (peers[producerData.socketId]) {
+                const producerSocket = peers[producerData.socketId].socket;
+                producerSocket.emit('new-producer', { producerId: id });
+            } else {
+                console.error('user not found');
+            }
         }
     });
 };
