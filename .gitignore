@@ -9,3 +9,4 @@ src/config.js
 #docker
 /docker-compose.yml
 public/bundle.js
+ssl
