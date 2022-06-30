@@ -14,7 +14,7 @@ if (onlyServerMediaSoup) {
     app.get('*', (req, res, next) => {
         const path = '/sfu/';
         if (req.path.indexOf(path) == 0 && req.path.length > path.length) return next();
-        res.send(`${nameApp}: You need to specify a room name in the path e.g. '${url}/sfu/room'`);
+        res.send(`${nameApp}: You need to specify a room name in the path e.g. <a href="${url}/sfu/mainroom" >${url}/sfu/[nameroom] or click here!</a>`);
     });
 
     app.use('/sfu/:room', express.static(path.join(__dirname, 'public')));
